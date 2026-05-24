@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Bike Scheduler</title>
+    <style>
+        :root {
+            --primary: #f59e0b;
+            --background: #f1f5f9;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            margin: 0;
+        }
+
+        .container {
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: #d97706;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        .booking-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .booking-item {
+            background-color: var(--background);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+
+        .booking-info strong {
+            display: block;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .booking-info span {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .delete-btn {
+            background-color: #ef4444;
+            width: auto;
+            margin-top: 0;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .delete-btn:hover {
+            background-color: #b91c1c;
+        }
+
+        .empty-state, .loading-state {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🚲 Firebase Bike Scheduler</h1>
+        
+        <form id="bookingForm">
+            <div class="form-group">
+                <label for="riderName">Who is riding?</label>
+                <input type="text" id="riderName" placeholder="Enter your name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="rideDate">Date</label>
+                <input type="date" id="rideDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="startTime">Start Time</label>
+                <input type="time" id="startTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="endTime">End Time</label>
+                <input type="time" id="endTime" required>
+            </div>
+
+            <button type="submit">Book Bike</button>
+        </form>
+
+        <hr>
+
+        <h2>Upcoming Rides</h2>
+        <div id="bookingContainer">
+            <p class="loading-state">Connecting to database...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase functions from the CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } 
+            from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // Your exact web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSCIwNy_IpVIqp-055o93IlWU4B2wkgqs",
+            authDomain: "bike-ffb71.firebaseapp.com",
+            projectId: "bike-ffb71",
+            storageBucket: "bike-ffb71.firebasestorage.app",
+            messagingSenderId: "641245275654",
+            appId: "1:641245275654:web:b2adffdbc7ddb717aa0587",
+            measurementId: "G-348P7SV89B"
+        };
+
+        // Initialize Firebase and Analytics
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const bookingsRef = collection(db, "bookings");
+
+        // UI Elements
+        const bookingForm = document.getElementById('bookingForm');
+        const bookingContainer = document.getElementById('bookingContainer');
+
+        // Helper function: format date
+        function formatDate(dateString) {
+            const options = { weekday: 'short', month: 'short', day: 'numeric' };
+            return new Date(dateString + 'T00:00:00').toLocaleDateString(undefined, options);
+        }
+
+        // Helper function: format time (AM/PM)
+        function formatTime(timeString) {
+            const [hour, minute] = timeString.split(':');
+            const h = parseInt(hour, 10);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const formattedHour = h % 12 || 12;
+            return `${formattedHour}:${minute} ${ampm}`;
+        }
+
+        // Listen to the database in real-time
+        const q = query(bookingsRef, orderBy("date"), orderBy("start"));
+        
+        onSnapshot(q, (snapshot) => {
+            bookingContainer.innerHTML = ''; // Clear container
+            
+            if (snapshot.empty) {
+                bookingContainer.innerHTML = '<p class="empty-state">No upcoming rides booked. Be the first!</p>';
+                return;
+            }
+
+            const ul = document.createElement('ul');
+            ul.className = 'booking-list';
+
+            snapshot.forEach((docSnapshot) => {
+                const booking = docSnapshot.data();
+                const bookingId = docSnapshot.id;
+
+                const li = document.createElement('li');
+                li.className = 'booking-item';
+
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'booking-info';
+                
+                infoDiv.innerHTML = `
+                    <strong>${booking.name}</strong>
+                    <span>📅 ${formatDate(booking.date)}</span><br>
+                    <span>⏰ ${formatTime(booking.start)} - ${formatTime(booking.end)}</span>
+                `;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Cancel';
+                
+                // Add event listener to delete from Firebase
+                deleteBtn.addEventListener('click', async () => {
+                    if(confirm("Are you sure you want to cancel this ride?")) {
+                        await deleteDoc(doc(db, "bookings", bookingId));
+                    }
+                });
+
+                li.appendChild(infoDiv);
+                li.appendChild(deleteBtn);
+                ul.appendChild(li);
+            });
+
+            bookingContainer.appendChild(ul);
+        });
+
+        // Handle form submission (Adding to database)
+        bookingForm.addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            
+            const submitButton = bookingForm.querySelector('button[type="submit"]');
+            submitButton.textContent = "Booking...";
+            submitButton.disabled = true;
+
+            const newBooking = {
+                name: document.getElementById('riderName').value,
+                date: document.getElementById('rideDate').value,
+                start: document.getElementById('startTime').value,
+                end: document.getElementById('endTime').value
+            };
+
+            try {
+                // Send to Firebase
+                await addDoc(bookingsRef, newBooking);
+                bookingForm.reset(); 
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Failed to book ride. Check console for details. (Make sure your Firestore rules are set to Test Mode!)");
+            } finally {
+                submitButton.textContent = "Book Bike";
+                submitButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
