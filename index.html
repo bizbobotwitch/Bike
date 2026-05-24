@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shared Bike Scheduler</title>
+    <title>Shared Bike & Hangout Scheduler</title>
     <style>
         :root {
             --primary: #f59e0b;
@@ -14,6 +14,7 @@
             --border: #e2e8f0;
             --aaron-color: #3b82f6; 
             --nathen-color: #10b981; 
+            --hangout-color: #a855f7; /* Purple for hangouts */
         }
 
         body {
@@ -114,10 +115,12 @@
         /* Calendar highlights for multiday trips */
         .calendar-day.Aaron-trip { background-color: rgba(59, 130, 246, 0.2); border-color: var(--aaron-color); }
         .calendar-day.Nathen-trip { background-color: rgba(16, 185, 129, 0.2); border-color: var(--nathen-color); }
+        .calendar-day.hangout-trip { background-color: rgba(168, 85, 247, 0.2); border-color: var(--hangout-color); }
         .calendar-day.pending-trip { background-color: rgba(245, 158, 11, 0.2); border-style: dashed; }
 
         /* Form Styles */
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;}
+        .form-group { margin-bottom: 1rem; }
         label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
         input, select {
             width: 100%; padding: 0.75rem; border: 1px solid var(--border);
@@ -139,6 +142,7 @@
         }
         .booking-item.Aaron { border-left-color: var(--aaron-color); }
         .booking-item.Nathen { border-left-color: var(--nathen-color); }
+        .booking-item.hangout { border-left-color: var(--hangout-color); }
         
         .booking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;}
         .booking-info span { font-size: 0.85rem; color: #64748b; display: block;}
@@ -240,7 +244,7 @@
             <span class="logout-link" onclick="logoutUser()">Switch User</span>
         </div>
 
-        <h1>🚲 Bike Calendar</h1>
+        <h1>🗓️ Shared Scheduler</h1>
         
         <div class="app-grid">
             <div class="calendar-section">
@@ -253,13 +257,21 @@
             </div>
 
             <form id="bookingForm">
+                <div class="form-group">
+                    <label for="bookingType">What are we planning?</label>
+                    <select id="bookingType" required>
+                        <option value="bike">🚲 Bike Ride</option>
+                        <option value="hangout">🍕 Hangout Day</option>
+                    </select>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="startDate">Start Date</label>
                         <input type="date" id="startDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="endDate">End Date (Return)</label>
+                        <label for="endDate">End Date</label>
                         <input type="date" id="endDate" required>
                     </div>
                 </div>
@@ -267,13 +279,13 @@
                 <div class="form-group">
                     <label for="repeatSchedule">Repeat Setup</label>
                     <select id="repeatSchedule">
-                        <option value="none">Just this one trip</option>
-                        <option value="weekly">Repeat Trip Weekly (4 times)</option>
-                        <option value="biweekly">Repeat Trip Bi-weekly (3 times)</option>
+                        <option value="none">Just this one trip/day</option>
+                        <option value="weekly">Repeat Weekly (4 times)</option>
+                        <option value="biweekly">Repeat Bi-weekly (3 times)</option>
                     </select>
                 </div>
 
-                <button type="submit" class="submit-btn">Request Bike Booking</button>
+                <button type="submit" class="submit-btn">Send Request</button>
             </form>
         </div>
 
@@ -291,7 +303,7 @@
 
         <hr>
 
-        <h2 class="section-title">💬 Bike Chat</h2>
+        <h2 class="section-title">💬 Chat</h2>
         <div class="chat-container">
             <div id="chatMessages" class="chat-messages">
                 </div>
@@ -331,6 +343,7 @@
         const userDisplay = document.getElementById('userDisplay');
         const startDateInput = document.getElementById('startDate');
         const endDateInput = document.getElementById('endDate');
+        const bookingTypeInput = document.getElementById('bookingType');
         const chatMessages = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
         
@@ -426,7 +439,12 @@
                 approvedBookings.forEach(booking => {
                     const range = getDatesInRange(booking.startDate, booking.endDate);
                     if(range.includes(dateString)) {
-                        dayDiv.classList.add(`${booking.requestedBy}-trip`);
+                        // Check if it's a hangout or bike ride
+                        if(booking.type === 'hangout') {
+                            dayDiv.classList.add('hangout-trip');
+                        } else {
+                            dayDiv.classList.add(`${booking.requestedBy}-trip`);
+                        }
                     }
                 });
 
@@ -472,20 +490,29 @@
             snapshot.forEach((docSnapshot) => {
                 const booking = docSnapshot.data();
                 const bookingId = docSnapshot.id;
+                
+                // Fallback for old bookings that didn't have a 'type' field
+                booking.type = booking.type || 'bike'; 
+                
                 allBookings.push(booking);
 
-                // Only show future/ongoing rides in lists using the fixed date logic
+                // Only show future/ongoing rides in lists
                 if(booking.endDate >= todayStr) {
                     const li = document.createElement('div');
-                    li.className = `booking-item ${booking.requestedBy}`;
+                    
+                    const isHangout = booking.type === 'hangout';
+                    li.className = `booking-item ${isHangout ? 'hangout' : booking.requestedBy}`;
 
                     const dateText = booking.startDate === booking.endDate 
                         ? formatDate(booking.startDate) 
                         : `${formatDate(booking.startDate)} to ${formatDate(booking.endDate)}`;
 
+                    const icon = isHangout ? '🍕' : '🚲';
+                    const titleName = isHangout ? 'Hangout' : 'Bike Ride';
+
                     let innerHTML = `
                         <div class="booking-header">
-                            <strong>${booking.requestedBy}'s Booking</strong>
+                            <strong>${icon} ${booking.requestedBy}'s ${titleName}</strong>
                             <span class="status-badge ${booking.status === 'pending' ? 'status-pending' : 'status-approved'}">
                                 ${booking.status.toUpperCase()}
                             </span>
@@ -506,7 +533,7 @@
                             // The OTHER person sees the approve button
                             const approveBtn = document.createElement('button');
                             approveBtn.className = 'btn-approve';
-                            approveBtn.innerText = 'Approve Ride';
+                            approveBtn.innerText = 'Approve';
                             approveBtn.onclick = async () => await updateDoc(doc(db, "bookings", bookingId), { status: 'approved' });
                             
                             const denyBtn = document.createElement('button');
@@ -521,7 +548,7 @@
                             const waitText = document.createElement('span');
                             waitText.style.fontSize = "0.85rem";
                             waitText.style.color = "#d97706";
-                            waitText.innerText = `Waiting for ${currentUser === 'Aaron' ? 'Nathen' : 'Aaron'} to approve...`;
+                            waitText.innerText = `Waiting for ${currentUser === 'Aaron' ? 'Nathen' : 'Aaron'}...`;
                             
                             const cancelBtn = document.createElement('button');
                             cancelBtn.className = 'btn-cancel';
@@ -538,15 +565,15 @@
                         const actionDiv = li.querySelector(`#actions-${bookingId}`);
                         const cancelBtn = document.createElement('button');
                         cancelBtn.className = 'btn-cancel';
-                        cancelBtn.innerText = 'Cancel Ride';
-                        cancelBtn.onclick = async () => { if(confirm("Cancel this confirmed ride?")) await deleteDoc(doc(db, "bookings", bookingId)); };
+                        cancelBtn.innerText = 'Cancel ' + titleName;
+                        cancelBtn.onclick = async () => { if(confirm(`Cancel this confirmed ${titleName}?`)) await deleteDoc(doc(db, "bookings", bookingId)); };
                         actionDiv.appendChild(cancelBtn);
                     }
                 }
             });
 
             if(!hasPending) pendingContainer.innerHTML = '<p class="empty-state">No pending requests right now.</p>';
-            if(!hasApproved) approvedContainer.innerHTML = '<p class="empty-state">No confirmed rides coming up.</p>';
+            if(!hasApproved) approvedContainer.innerHTML = '<p class="empty-state">No confirmed plans coming up.</p>';
 
             renderCalendar(); 
         }, (error) => {
@@ -562,6 +589,7 @@
             submitBtn.textContent = "Sending Request...";
             submitBtn.disabled = true;
 
+            const bType = bookingTypeInput.value;
             const startStr = startDateInput.value;
             const endStr = endDateInput.value;
             const repeat = document.getElementById('repeatSchedule').value;
@@ -594,6 +622,7 @@
             try {
                 const promises = bookingsToCreate.map(dates => {
                     return addDoc(bookingsRef, {
+                        type: bType,
                         requestedBy: currentUser,
                         startDate: dates.start,
                         endDate: dates.end,
@@ -606,9 +635,9 @@
                 
             } catch (error) {
                 console.error(error);
-                alert("Failed to request booking. Double-check your Firestore Rules.");
+                alert("Failed to request booking.");
             } finally {
-                submitBtn.textContent = "Request Bike Booking";
+                submitBtn.textContent = "Send Request";
                 submitBtn.disabled = false;
             }
         });
@@ -626,7 +655,6 @@
             snapshot.forEach((docSnap) => {
                 const msg = docSnap.data();
                 
-                // Hide optimistic updates that don't have a timestamp yet
                 if(!msg.timestamp) return; 
 
                 const isMine = msg.sender === currentUser;
@@ -634,7 +662,6 @@
                 div.className = `chat-msg ${isMine ? 'msg-mine' : 'msg-theirs'}`;
                 
                 let html = '';
-                // Only show the sender's name if it's the other person
                 if (!isMine) {
                     html += `<div class="msg-sender">${msg.sender}</div>`;
                 }
@@ -644,7 +671,6 @@
                 chatMessages.appendChild(div);
             });
 
-            // Auto-scroll to the bottom when a new message arrives
             chatMessages.scrollTop = chatMessages.scrollHeight;
         });
 
@@ -655,13 +681,13 @@
             
             if (!text || !currentUser) return;
             
-            input.value = ''; // clear input immediately so it feels snappy
+            input.value = ''; 
             
             try {
                 await addDoc(chatRef, {
                     sender: currentUser,
                     text: text,
-                    timestamp: serverTimestamp() // Uses Firebase server time
+                    timestamp: serverTimestamp() 
                 });
             } catch (err) {
                 console.error("Error sending message:", err);
