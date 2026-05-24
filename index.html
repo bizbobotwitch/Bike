@@ -14,7 +14,7 @@
             --border: #e2e8f0;
             --aaron-color: #3b82f6; 
             --nathen-color: #10b981; 
-            --hangout-color: #a855f7; /* Purple for hangouts */
+            --hangout-color: #a855f7; 
         }
 
         body {
@@ -29,12 +29,18 @@
 
         .container {
             background-color: var(--surface);
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 600px;
         }
+
+        /* Scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         /* Login Modal Overlay */
         #loginOverlay {
@@ -47,50 +53,24 @@
             z-index: 1000;
         }
         .login-box {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            background: white; padding: 2rem; border-radius: 12px;
+            text-align: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
         .login-btn {
-            display: block;
-            width: 100%;
-            margin: 1rem 0;
-            padding: 1rem;
-            font-size: 1.1rem;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
+            display: block; width: 100%; margin: 1rem 0; padding: 1rem;
+            font-size: 1.1rem; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
         }
         .btn-aaron { background-color: var(--aaron-color); }
         .btn-nathen { background-color: var(--nathen-color); }
         
         .header-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--background);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--background); padding: 0.5rem 1rem; border-radius: 8px;
+            margin-bottom: 1.5rem; font-size: 0.9rem;
         }
-        .logout-link {
-            color: #ef4444;
-            cursor: pointer;
-            text-decoration: underline;
-        }
+        .logout-link { color: #ef4444; cursor: pointer; text-decoration: underline; }
 
-        h1, h2 {
-            text-align: center;
-            margin-top: 0;
-            color: var(--text);
-        }
-
-        .app-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+        h1, h2 { text-align: center; margin-top: 0; color: var(--text); }
 
         /* Calendar Styles */
         .calendar-header {
@@ -98,21 +78,19 @@
             margin-bottom: 1rem; font-weight: bold;
         }
         .calendar-btn {
-            background: none; border: 1px solid var(--border);
-            padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;
+            background: none; border: 1px solid var(--border); padding: 0.3rem 0.8rem; 
+            border-radius: 6px; cursor: pointer;
         }
         .calendar-grid {
             display: grid; grid-template-columns: repeat(7, 1fr);
-            gap: 4px; text-align: center;
+            gap: 4px; text-align: center; margin-bottom: 1rem;
         }
-        .day-name { font-size: 0.8rem; color: #64748b; font-weight: bold; padding-bottom: 0.5rem; }
+        .day-name { font-size: 0.75rem; color: #64748b; font-weight: bold; padding-bottom: 0.25rem; }
         .calendar-day {
-            padding: 0.75rem 0.25rem; border-radius: 6px; border: 1px solid transparent;
-            cursor: pointer; font-size: 0.9rem; position: relative; background-color: var(--background);
+            padding: 0.5rem 0.25rem; border-radius: 6px; border: 1px solid transparent;
+            cursor: pointer; font-size: 0.85rem; position: relative; background-color: var(--background);
         }
         .calendar-day.empty { background-color: transparent; cursor: default; }
-        
-        /* Calendar highlights for multiday trips */
         .calendar-day.Aaron-trip { background-color: rgba(59, 130, 246, 0.2); border-color: var(--aaron-color); }
         .calendar-day.Nathen-trip { background-color: rgba(16, 185, 129, 0.2); border-color: var(--nathen-color); }
         .calendar-day.hangout-trip { background-color: rgba(168, 85, 247, 0.2); border-color: var(--hangout-color); }
@@ -121,109 +99,69 @@
         /* Form Styles */
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;}
         .form-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
+        label { display: block; margin-bottom: 0.25rem; font-weight: 600; font-size: 0.85rem; }
         input, select {
-            width: 100%; padding: 0.75rem; border: 1px solid var(--border);
-            border-radius: 6px; box-sizing: border-box; font-size: 1rem;
+            width: 100%; padding: 0.6rem; border: 1px solid var(--border);
+            border-radius: 6px; box-sizing: border-box; font-size: 0.9rem;
         }
-        button.submit-btn {
-            width: 100%; background-color: var(--primary); color: white;
-            border: none; padding: 0.75rem; border-radius: 6px; font-size: 1rem;
-            font-weight: 600; cursor: pointer; margin-top: 1rem;
+        button.action-btn {
+            width: 100%; color: white; border: none; padding: 0.75rem; 
+            border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer;
         }
+        .submit-btn { background-color: var(--primary); margin-top: 0.5rem; }
+        .toggle-btn { background-color: #64748b; margin-bottom: 1rem; }
 
-        hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+        hr { border: 0; border-top: 1px solid var(--border); margin: 1.5rem 0; }
 
         /* List Styles */
-        .booking-list { list-style: none; padding: 0; margin: 0; }
+        .scrollable-list {
+            max-height: 220px; /* Constrains the height to stop clutter */
+            overflow-y: auto;
+            padding-right: 5px;
+        }
         .booking-item {
-            background-color: var(--background); padding: 1rem; border-radius: 6px;
-            margin-bottom: 0.75rem; border-left: 4px solid var(--border);
+            background-color: var(--background); padding: 0.75rem; border-radius: 6px;
+            margin-bottom: 0.5rem; border-left: 4px solid var(--border);
         }
         .booking-item.Aaron { border-left-color: var(--aaron-color); }
         .booking-item.Nathen { border-left-color: var(--nathen-color); }
         .booking-item.hangout { border-left-color: var(--hangout-color); }
         
-        .booking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;}
-        .booking-info span { font-size: 0.85rem; color: #64748b; display: block;}
+        .booking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;}
+        .booking-info span { font-size: 0.8rem; color: #64748b; display: block;}
         
-        .actions { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
-        .btn-approve { background-color: #10b981; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer;}
-        .btn-cancel { background-color: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer;}
-        .status-badge { font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 12px; font-weight: bold; }
+        .actions { margin-top: 0.5rem; display: flex; gap: 0.5rem; }
+        .btn-approve { background-color: #10b981; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size:0.8rem; cursor: pointer;}
+        .btn-cancel { background-color: #ef4444; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size:0.8rem; cursor: pointer;}
+        .status-badge { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 12px; font-weight: bold; }
         .status-pending { background: #fef3c7; color: #d97706; }
         .status-approved { background: #d1fae5; color: #047857; }
 
-        .section-title { font-size: 1.1rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;}
-        .empty-state { text-align: center; color: #64748b; font-size: 0.9rem; }
+        .section-title { font-size: 1rem; color: var(--text); margin-bottom: 0.75rem; border-bottom: 2px solid var(--border); padding-bottom: 0.25rem;}
+        .empty-state { text-align: center; color: #64748b; font-size: 0.85rem; padding: 1rem 0; }
 
         /* Chat Styles */
         .chat-container {
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 350px;
-            background: #f8fafc;
+            border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+            display: flex; flex-direction: column; height: 300px; background: #f8fafc;
         }
         .chat-messages {
-            flex-grow: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
+            flex-grow: 1; padding: 0.75rem; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 0.5rem;
         }
         .chat-msg {
-            max-width: 80%;
-            padding: 0.5rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            position: relative;
+            max-width: 80%; padding: 0.5rem 0.75rem; border-radius: 12px;
+            font-size: 0.9rem; position: relative;
         }
-        .msg-mine {
-            align-self: flex-end;
-            background: var(--primary);
-            color: white;
-            border-bottom-right-radius: 2px;
-        }
-        .msg-theirs {
-            align-self: flex-start;
-            background: #e2e8f0;
-            color: var(--text);
-            border-bottom-left-radius: 2px;
-        }
-        .msg-sender {
-            font-size: 0.7rem;
-            opacity: 0.8;
-            margin-bottom: 0.2rem;
-            font-weight: bold;
-        }
-        .chat-form {
-            display: flex;
-            border-top: 1px solid var(--border);
-            background: white;
-        }
-        .chat-form input {
-            flex-grow: 1;
-            border: none;
-            border-radius: 0;
-            padding: 1rem;
-            outline: none;
-        }
+        .msg-mine { align-self: flex-end; background: var(--primary); color: white; border-bottom-right-radius: 2px; }
+        .msg-theirs { align-self: flex-start; background: #e2e8f0; color: var(--text); border-bottom-left-radius: 2px; }
+        .msg-sender { font-size: 0.7rem; opacity: 0.8; margin-bottom: 0.2rem; font-weight: bold; }
+        .chat-form { display: flex; border-top: 1px solid var(--border); background: white; }
+        .chat-form input { flex-grow: 1; border: none; border-radius: 0; padding: 0.75rem; outline: none; }
         .chat-form button {
-            width: auto;
-            margin: 0;
-            border-radius: 0;
-            border: none;
-            background: var(--primary);
-            color: white;
-            padding: 0 1.5rem;
-            cursor: pointer;
-            font-weight: bold;
+            width: auto; margin: 0; border-radius: 0; border: none; background: var(--primary);
+            color: white; padding: 0 1rem; cursor: pointer; font-weight: bold;
         }
-        .chat-form button:hover { background-color: var(--primary-dark); }
     </style>
 </head>
 <body>
@@ -231,7 +169,7 @@
     <div id="loginOverlay">
         <div class="login-box">
             <h2>Who is using the app?</h2>
-            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Select your profile to continue.</p>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Select your profile.</p>
             <button class="login-btn btn-aaron" onclick="loginUser('Aaron')">I am Aaron</button>
             <button class="login-btn btn-nathen" onclick="loginUser('Nathen')">I am Nathen</button>
         </div>
@@ -246,58 +184,56 @@
 
         <h1>🗓️ Shared Scheduler</h1>
         
-        <div class="app-grid">
-            <div class="calendar-section">
-                <div class="calendar-header">
-                    <button class="calendar-btn" id="prevMonth">&lt;</button>
-                    <span id="monthDisplay">Month Year</span>
-                    <button class="calendar-btn" id="nextMonth">&gt;</button>
-                </div>
-                <div class="calendar-grid" id="calendarDays"></div>
+        <div class="calendar-header">
+            <button class="calendar-btn" id="prevMonth">&lt;</button>
+            <span id="monthDisplay">Month Year</span>
+            <button class="calendar-btn" id="nextMonth">&gt;</button>
+        </div>
+        <div class="calendar-grid" id="calendarDays"></div>
+
+        <button type="button" id="toggleFormBtn" class="action-btn toggle-btn">➕ Schedule a New Plan</button>
+
+        <form id="bookingForm" style="display: none;">
+            <div class="form-group">
+                <label for="bookingType">What are we planning?</label>
+                <select id="bookingType" required>
+                    <option value="bike">🚲 Bike Ride</option>
+                    <option value="hangout">🍕 Hangout Day</option>
+                </select>
             </div>
 
-            <form id="bookingForm">
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="bookingType">What are we planning?</label>
-                    <select id="bookingType" required>
-                        <option value="bike">🚲 Bike Ride</option>
-                        <option value="hangout">🍕 Hangout Day</option>
-                    </select>
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" required>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="startDate">Start Date</label>
-                        <input type="date" id="startDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="endDate">End Date</label>
-                        <input type="date" id="endDate" required>
-                    </div>
-                </div>
-
                 <div class="form-group">
-                    <label for="repeatSchedule">Repeat Setup</label>
-                    <select id="repeatSchedule">
-                        <option value="none">Just this one trip/day</option>
-                        <option value="weekly">Repeat Weekly (4 times)</option>
-                        <option value="biweekly">Repeat Bi-weekly (3 times)</option>
-                    </select>
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" required>
                 </div>
+            </div>
 
-                <button type="submit" class="submit-btn">Send Request</button>
-            </form>
-        </div>
+            <div class="form-group">
+                <label for="repeatSchedule">Repeat Setup</label>
+                <select id="repeatSchedule">
+                    <option value="none">Just this one trip/day</option>
+                    <option value="weekly">Repeat Weekly (4 times)</option>
+                    <option value="biweekly">Repeat Bi-weekly (3 times)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="action-btn submit-btn">Send Request</button>
+        </form>
 
         <hr>
 
         <h2 class="section-title">⚠️ Pending Approvals</h2>
-        <div id="pendingContainer">
+        <div id="pendingContainer" class="scrollable-list">
             <p class="empty-state">Loading...</p>
         </div>
 
-        <h2 class="section-title" style="margin-top: 2rem;">✅ Confirmed Schedule</h2>
-        <div id="approvedContainer">
+        <h2 class="section-title" style="margin-top: 1.5rem;">✅ Confirmed Schedule</h2>
+        <div id="approvedContainer" class="scrollable-list">
             <p class="empty-state">Loading...</p>
         </div>
 
@@ -305,10 +241,9 @@
 
         <h2 class="section-title">💬 Chat</h2>
         <div class="chat-container">
-            <div id="chatMessages" class="chat-messages">
-                </div>
+            <div id="chatMessages" class="chat-messages"></div>
             <form id="chatForm" class="chat-form">
-                <input type="text" id="chatInput" placeholder="Send a message..." required autocomplete="off">
+                <input type="text" id="chatInput" placeholder="Message..." required autocomplete="off">
                 <button type="submit">Send</button>
             </form>
         </div>
@@ -347,6 +282,21 @@
         const chatMessages = document.getElementById('chatMessages');
         const chatForm = document.getElementById('chatForm');
         
+        // Form Toggle Logic
+        const toggleFormBtn = document.getElementById('toggleFormBtn');
+        const bookingForm = document.getElementById('bookingForm');
+        toggleFormBtn.addEventListener('click', () => {
+            if(bookingForm.style.display === 'none') {
+                bookingForm.style.display = 'block';
+                toggleFormBtn.textContent = '➖ Cancel New Plan';
+                toggleFormBtn.style.backgroundColor = '#ef4444';
+            } else {
+                bookingForm.style.display = 'none';
+                toggleFormBtn.textContent = '➕ Schedule a New Plan';
+                toggleFormBtn.style.backgroundColor = '#64748b';
+            }
+        });
+        
         // --- AUTHENTICATION LOGIC ---
         window.loginUser = function(name) {
             localStorage.setItem('bikeAppUser', name);
@@ -372,22 +322,17 @@
         }
         checkAuth();
 
-        // Safe local date generation (Fixes the UTC bug!)
         const now = new Date();
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         
         startDateInput.value = todayStr;
         endDateInput.value = todayStr;
 
-        // Auto-update end date if it's before start date
         startDateInput.addEventListener('change', () => {
-            if(endDateInput.value < startDateInput.value) {
-                endDateInput.value = startDateInput.value;
-            }
+            if(endDateInput.value < startDateInput.value) endDateInput.value = startDateInput.value;
             renderCalendar();
         });
 
-        // --- HELPER: Get all days between two dates ---
         function getDatesInRange(startStr, endStr) {
             const dates = [];
             let curr = new Date(startStr + 'T00:00:00');
@@ -414,7 +359,7 @@
 
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
-            monthDisplay.innerText = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+            monthDisplay.innerText = new Date(year, month).toLocaleString('default', { month: 'short', year: 'numeric' });
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -434,27 +379,19 @@
                 const d = String(day).padStart(2, '0');
                 const dateString = `${year}-${m}-${d}`;
 
-                // Highlight Approved Bookings
                 const approvedBookings = allBookings.filter(b => b.status === 'approved');
                 approvedBookings.forEach(booking => {
                     const range = getDatesInRange(booking.startDate, booking.endDate);
                     if(range.includes(dateString)) {
-                        // Check if it's a hangout or bike ride
-                        if(booking.type === 'hangout') {
-                            dayDiv.classList.add('hangout-trip');
-                        } else {
-                            dayDiv.classList.add(`${booking.requestedBy}-trip`);
-                        }
+                        if(booking.type === 'hangout') dayDiv.classList.add('hangout-trip');
+                        else dayDiv.classList.add(`${booking.requestedBy}-trip`);
                     }
                 });
 
-                // Highlight Pending Bookings
                 const pendingBookings = allBookings.filter(b => b.status === 'pending');
                 pendingBookings.forEach(booking => {
                     const range = getDatesInRange(booking.startDate, booking.endDate);
-                    if(range.includes(dateString)) {
-                        dayDiv.classList.add('pending-trip');
-                    }
+                    if(range.includes(dateString)) dayDiv.classList.add('pending-trip');
                 });
 
                 dayDiv.addEventListener('click', () => {
@@ -470,9 +407,9 @@
         document.getElementById('prevMonth').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
         document.getElementById('nextMonth').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
 
-        // --- LISTENER & RENDERING LOGIC (Bookings) ---
+        // --- RENDERING BOOKINGS ---
         function formatDate(dateStr) {
-            return new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+            return new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
         }
 
         const qBookings = query(bookingsRef, orderBy("startDate"));
@@ -490,16 +427,11 @@
             snapshot.forEach((docSnapshot) => {
                 const booking = docSnapshot.data();
                 const bookingId = docSnapshot.id;
-                
-                // Fallback for old bookings that didn't have a 'type' field
                 booking.type = booking.type || 'bike'; 
-                
                 allBookings.push(booking);
 
-                // Only show future/ongoing rides in lists
                 if(booking.endDate >= todayStr) {
                     const li = document.createElement('div');
-                    
                     const isHangout = booking.type === 'hangout';
                     li.className = `booking-item ${isHangout ? 'hangout' : booking.requestedBy}`;
 
@@ -510,84 +442,67 @@
                     const icon = isHangout ? '🍕' : '🚲';
                     const titleName = isHangout ? 'Hangout' : 'Bike Ride';
 
-                    let innerHTML = `
+                    li.innerHTML = `
                         <div class="booking-header">
-                            <strong>${icon} ${booking.requestedBy}'s ${titleName}</strong>
+                            <strong>${icon} ${booking.requestedBy}</strong>
                             <span class="status-badge ${booking.status === 'pending' ? 'status-pending' : 'status-approved'}">
                                 ${booking.status.toUpperCase()}
                             </span>
                         </div>
-                        <div class="booking-info">
-                            <span>📅 ${dateText}</span>
-                        </div>
+                        <div class="booking-info"><span>📅 ${dateText}</span></div>
                         <div class="actions" id="actions-${bookingId}"></div>
                     `;
-                    li.innerHTML = innerHTML;
 
                     if(booking.status === 'pending') {
                         hasPending = true;
                         pendingContainer.appendChild(li);
-                        
                         const actionDiv = li.querySelector(`#actions-${bookingId}`);
+                        
                         if(booking.requestedBy !== currentUser) {
-                            // The OTHER person sees the approve button
                             const approveBtn = document.createElement('button');
-                            approveBtn.className = 'btn-approve';
-                            approveBtn.innerText = 'Approve';
+                            approveBtn.className = 'btn-approve'; approveBtn.innerText = 'Approve';
                             approveBtn.onclick = async () => await updateDoc(doc(db, "bookings", bookingId), { status: 'approved' });
                             
                             const denyBtn = document.createElement('button');
-                            denyBtn.className = 'btn-cancel';
-                            denyBtn.innerText = 'Deny';
+                            denyBtn.className = 'btn-cancel'; denyBtn.innerText = 'Deny';
                             denyBtn.onclick = async () => { if(confirm("Deny this request?")) await deleteDoc(doc(db, "bookings", bookingId)); };
 
                             actionDiv.appendChild(approveBtn);
                             actionDiv.appendChild(denyBtn);
                         } else {
-                            // YOU see the waiting text and cancel button
                             const waitText = document.createElement('span');
-                            waitText.style.fontSize = "0.85rem";
-                            waitText.style.color = "#d97706";
+                            waitText.style.fontSize = "0.75rem"; waitText.style.color = "#d97706";
                             waitText.innerText = `Waiting for ${currentUser === 'Aaron' ? 'Nathen' : 'Aaron'}...`;
                             
                             const cancelBtn = document.createElement('button');
-                            cancelBtn.className = 'btn-cancel';
-                            cancelBtn.innerText = 'Cancel Request';
-                            cancelBtn.onclick = async () => { if(confirm("Cancel your request?")) await deleteDoc(doc(db, "bookings", bookingId)); };
+                            cancelBtn.className = 'btn-cancel'; cancelBtn.innerText = 'Cancel';
+                            cancelBtn.onclick = async () => { if(confirm("Cancel request?")) await deleteDoc(doc(db, "bookings", bookingId)); };
 
-                            actionDiv.appendChild(waitText);
-                            actionDiv.appendChild(cancelBtn);
+                            actionDiv.appendChild(waitText); actionDiv.appendChild(cancelBtn);
                         }
                     } else {
                         hasApproved = true;
                         approvedContainer.appendChild(li);
-                        
                         const actionDiv = li.querySelector(`#actions-${bookingId}`);
                         const cancelBtn = document.createElement('button');
-                        cancelBtn.className = 'btn-cancel';
-                        cancelBtn.innerText = 'Cancel ' + titleName;
-                        cancelBtn.onclick = async () => { if(confirm(`Cancel this confirmed ${titleName}?`)) await deleteDoc(doc(db, "bookings", bookingId)); };
+                        cancelBtn.className = 'btn-cancel'; cancelBtn.innerText = 'Cancel ' + titleName;
+                        cancelBtn.onclick = async () => { if(confirm(`Cancel confirmed ${titleName}?`)) await deleteDoc(doc(db, "bookings", bookingId)); };
                         actionDiv.appendChild(cancelBtn);
                     }
                 }
             });
 
-            if(!hasPending) pendingContainer.innerHTML = '<p class="empty-state">No pending requests right now.</p>';
-            if(!hasApproved) approvedContainer.innerHTML = '<p class="empty-state">No confirmed plans coming up.</p>';
+            if(!hasPending) pendingContainer.innerHTML = '<p class="empty-state">No pending requests.</p>';
+            if(!hasApproved) approvedContainer.innerHTML = '<p class="empty-state">No confirmed plans.</p>';
 
             renderCalendar(); 
-        }, (error) => {
-            console.error("Firestore Error:", error);
-            document.getElementById('pendingContainer').innerHTML = `<p class="empty-state" style="color:red;">Error connecting to database. Please refresh or check Firestore rules.</p>`;
         });
 
-        // --- FORM SUBMISSION (Bookings) ---
+        // --- FORM SUBMISSION ---
         document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault(); 
-            
             const submitBtn = this.querySelector('.submit-btn');
-            submitBtn.textContent = "Sending Request...";
-            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending..."; submitBtn.disabled = true;
 
             const bType = bookingTypeInput.value;
             const startStr = startDateInput.value;
@@ -596,22 +511,19 @@
 
             const startObj = new Date(startStr + 'T00:00:00');
             const endObj = new Date(endStr + 'T00:00:00');
-            const diffTime = Math.abs(endObj - startObj);
-            const durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const durationDays = Math.ceil(Math.abs(endObj - startObj) / (1000 * 60 * 60 * 24));
 
             const bookingsToCreate = [];
 
             if (repeat === 'none') {
                 bookingsToCreate.push({ start: startStr, end: endStr });
-            } 
-            else if (repeat === 'weekly') {
+            } else if (repeat === 'weekly') {
                 for (let i = 0; i < 4; i++) {
                     const newStart = new Date(startObj); newStart.setDate(startObj.getDate() + (i * 7));
                     const newEnd = new Date(newStart); newEnd.setDate(newStart.getDate() + durationDays);
                     bookingsToCreate.push({ start: newStart.toISOString().split('T')[0], end: newEnd.toISOString().split('T')[0] });
                 }
-            } 
-            else if (repeat === 'biweekly') {
+            } else if (repeat === 'biweekly') {
                 for (let i = 0; i < 3; i++) {
                     const newStart = new Date(startObj); newStart.setDate(startObj.getDate() + (i * 14));
                     const newEnd = new Date(newStart); newEnd.setDate(newStart.getDate() + durationDays);
@@ -622,55 +534,40 @@
             try {
                 const promises = bookingsToCreate.map(dates => {
                     return addDoc(bookingsRef, {
-                        type: bType,
-                        requestedBy: currentUser,
-                        startDate: dates.start,
-                        endDate: dates.end,
-                        status: 'pending' 
+                        type: bType, requestedBy: currentUser, startDate: dates.start, endDate: dates.end, status: 'pending' 
                     });
                 });
-
                 await Promise.all(promises);
-                document.getElementById('repeatSchedule').value = 'none';
                 
+                // Hide form after successful submission
+                bookingForm.style.display = 'none';
+                toggleFormBtn.textContent = '➕ Schedule a New Plan';
+                toggleFormBtn.style.backgroundColor = '#64748b';
+                document.getElementById('repeatSchedule').value = 'none';
             } catch (error) {
-                console.error(error);
                 alert("Failed to request booking.");
             } finally {
-                submitBtn.textContent = "Send Request";
-                submitBtn.disabled = false;
+                submitBtn.textContent = "Send Request"; submitBtn.disabled = false;
             }
         });
 
-        // --- REAL-TIME CHAT LOGIC ---
+        // --- CHAT LOGIC ---
         const qChat = query(chatRef, orderBy("timestamp"));
         onSnapshot(qChat, (snapshot) => {
             chatMessages.innerHTML = '';
-            
             if (snapshot.empty) {
-                chatMessages.innerHTML = '<p class="empty-state" style="margin-top:auto; margin-bottom:auto;">No messages yet. Say hi!</p>';
+                chatMessages.innerHTML = '<p class="empty-state" style="margin-top:auto; margin-bottom:auto;">No messages yet.</p>';
                 return;
             }
-
             snapshot.forEach((docSnap) => {
                 const msg = docSnap.data();
-                
                 if(!msg.timestamp) return; 
-
                 const isMine = msg.sender === currentUser;
                 const div = document.createElement('div');
                 div.className = `chat-msg ${isMine ? 'msg-mine' : 'msg-theirs'}`;
-                
-                let html = '';
-                if (!isMine) {
-                    html += `<div class="msg-sender">${msg.sender}</div>`;
-                }
-                html += `<div>${msg.text}</div>`;
-                
-                div.innerHTML = html;
+                div.innerHTML = (!isMine ? `<div class="msg-sender">${msg.sender}</div>` : '') + `<div>${msg.text}</div>`;
                 chatMessages.appendChild(div);
             });
-
             chatMessages.scrollTop = chatMessages.scrollHeight;
         });
 
@@ -678,23 +575,12 @@
             e.preventDefault();
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
-            
             if (!text || !currentUser) return;
-            
             input.value = ''; 
-            
             try {
-                await addDoc(chatRef, {
-                    sender: currentUser,
-                    text: text,
-                    timestamp: serverTimestamp() 
-                });
-            } catch (err) {
-                console.error("Error sending message:", err);
-                alert("Failed to send message.");
-            }
+                await addDoc(chatRef, { sender: currentUser, text: text, timestamp: serverTimestamp() });
+            } catch (err) { alert("Failed to send message."); }
         });
-
     </script>
 </body>
 </html>
