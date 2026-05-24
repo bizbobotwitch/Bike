@@ -12,8 +12,8 @@
             --surface: #ffffff;
             --text: #1e293b;
             --border: #e2e8f0;
-            --me-color: #3b82f6; /* Blue for you */
-            --friend-color: #10b981; /* Green for friend */
+            --aaron-color: #3b82f6; 
+            --nathen-color: #10b981; 
         }
 
         body {
@@ -35,250 +35,198 @@
             max-width: 600px;
         }
 
-        h1 {
+        /* Login Modal Overlay */
+        #loginOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .login-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
             text-align: center;
-            margin-top: 0;
-            color: var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-
-        /* Layout Grid */
-        .app-grid {
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: 1fr;
+        .login-btn {
+            display: block;
+            width: 100%;
+            margin: 1rem 0;
+            padding: 1rem;
+            font-size: 1.1rem;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
         }
-
-        /* Calendar Styles */
-        .calendar-header {
+        .btn-aaron { background-color: var(--aaron-color); }
+        .btn-nathen { background-color: var(--nathen-color); }
+        
+        .header-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
-            font-weight: bold;
+            background: var(--background);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .logout-link {
+            color: #ef4444;
+            cursor: pointer;
+            text-decoration: underline;
         }
 
-        .calendar-btn {
-            background: none;
-            border: 1px solid var(--border);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
+        h1, h2 {
+            text-align: center;
+            margin-top: 0;
             color: var(--text);
         }
 
-        .calendar-btn:hover { background: var(--background); }
+        .app-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
 
+        /* Calendar Styles */
+        .calendar-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1rem; font-weight: bold;
+        }
+        .calendar-btn {
+            background: none; border: 1px solid var(--border);
+            padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer;
+        }
         .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 4px; text-align: center;
         }
-
-        .day-name {
-            font-size: 0.8rem;
-            color: #64748b;
-            font-weight: bold;
-            padding-bottom: 0.5rem;
-        }
-
+        .day-name { font-size: 0.8rem; color: #64748b; font-weight: bold; padding-bottom: 0.5rem; }
         .calendar-day {
-            padding: 0.75rem 0.25rem;
-            border-radius: 6px;
-            border: 1px solid transparent;
-            cursor: pointer;
-            font-size: 0.9rem;
-            position: relative;
-            background-color: var(--background);
+            padding: 0.75rem 0.25rem; border-radius: 6px; border: 1px solid transparent;
+            cursor: pointer; font-size: 0.9rem; position: relative; background-color: var(--background);
         }
-
-        .calendar-day:hover {
-            border-color: var(--primary);
-        }
-
-        .calendar-day.selected {
-            background-color: var(--primary);
-            color: white;
-            font-weight: bold;
-        }
-
-        .calendar-day.empty {
-            background-color: transparent;
-            cursor: default;
-        }
-
-        /* Little dots for bookings on the calendar */
-        .dot-container {
-            display: flex;
-            justify-content: center;
-            gap: 2px;
-            margin-top: 4px;
-            height: 6px;
-        }
-        .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-        .dot.Me { background-color: var(--me-color); }
-        .dot.Friend { background-color: var(--friend-color); }
+        .calendar-day.empty { background-color: transparent; cursor: default; }
+        
+        /* Calendar highlights for multiday trips */
+        .calendar-day.Aaron-trip { background-color: rgba(59, 130, 246, 0.2); border-color: var(--aaron-color); }
+        .calendar-day.Nathen-trip { background-color: rgba(16, 185, 129, 0.2); border-color: var(--nathen-color); }
+        .calendar-day.pending-trip { background-color: rgba(245, 158, 11, 0.2); border-style: dashed; }
 
         /* Form Styles */
-        .form-group { margin-bottom: 1rem; }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;}
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
         input, select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 1rem;
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border);
+            border-radius: 6px; box-sizing: border-box; font-size: 1rem;
         }
-
         button.submit-btn {
-            width: 100%;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 1rem;
+            width: 100%; background-color: var(--primary); color: white;
+            border: none; padding: 0.75rem; border-radius: 6px; font-size: 1rem;
+            font-weight: 600; cursor: pointer; margin-top: 1rem;
         }
 
-        button.submit-btn:hover { background-color: var(--primary-dark); }
-
-        hr {
-            border: 0;
-            border-top: 1px solid var(--border);
-            margin: 2rem 0;
-        }
+        hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
 
         /* List Styles */
-        .booking-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
+        .booking-list { list-style: none; padding: 0; margin: 0; }
         .booking-item {
-            background-color: var(--background);
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid var(--border);
+            background-color: var(--background); padding: 1rem; border-radius: 6px;
+            margin-bottom: 0.75rem; border-left: 4px solid var(--border);
         }
+        .booking-item.Aaron { border-left-color: var(--aaron-color); }
+        .booking-item.Nathen { border-left-color: var(--nathen-color); }
+        
+        .booking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;}
+        .booking-info span { font-size: 0.85rem; color: #64748b; display: block;}
+        
+        .actions { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
+        .btn-approve { background-color: #10b981; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer;}
+        .btn-cancel { background-color: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer;}
+        .status-badge { font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 12px; font-weight: bold; }
+        .status-pending { background: #fef3c7; color: #d97706; }
+        .status-approved { background: #d1fae5; color: #047857; }
 
-        .booking-item.Me { border-left-color: var(--me-color); }
-        .booking-item.Friend { border-left-color: var(--friend-color); }
-
-        .booking-info strong { display: block; margin-bottom: 0.25rem; }
-        .booking-info span { font-size: 0.85rem; color: #64748b; }
-
-        .delete-btn {
-            background-color: #ef4444;
-            color: white;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            cursor: pointer;
-        }
-
-        .delete-btn:hover { background-color: #b91c1c; }
+        .section-title { font-size: 1.1rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;}
         .empty-state { text-align: center; color: #64748b; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2>Who is using the app?</h2>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem;">Select your profile to continue.</p>
+            <button class="login-btn btn-aaron" onclick="loginUser('Aaron')">I am Aaron</button>
+            <button class="login-btn btn-nathen" onclick="loginUser('Nathen')">I am Nathen</button>
+        </div>
+    </div>
+
+    <div class="container" id="mainApp" style="display: none;">
+        
+        <div class="header-bar">
+            <span>Logged in as: <strong id="userDisplay">...</strong></span>
+            <span class="logout-link" onclick="logoutUser()">Switch User</span>
+        </div>
+
         <h1>🚲 Bike Calendar</h1>
         
         <div class="app-grid">
-            
             <div class="calendar-section">
                 <div class="calendar-header">
                     <button class="calendar-btn" id="prevMonth">&lt;</button>
                     <span id="monthDisplay">Month Year</span>
                     <button class="calendar-btn" id="nextMonth">&gt;</button>
                 </div>
-                <div class="calendar-grid" id="calendarDays">
-                    </div>
+                <div class="calendar-grid" id="calendarDays"></div>
             </div>
 
             <form id="bookingForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="riderName">Who is riding?</label>
-                        <select id="riderName" required>
-                            <option value="Me">Me</option>
-                            <option value="Friend">Friend</option>
-                        </select>
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" required>
                     </div>
                     <div class="form-group">
-                        <label for="rideDate">Selected Date</label>
-                        <input type="date" id="rideDate" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="startTime">Start Time</label>
-                        <input type="time" id="startTime" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="endTime">End Time</label>
-                        <input type="time" id="endTime" required>
+                        <label for="endDate">End Date (Return)</label>
+                        <input type="date" id="endDate" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="repeatSchedule">Schedule Setter</label>
+                    <label for="repeatSchedule">Repeat Setup</label>
                     <select id="repeatSchedule">
-                        <option value="none">Just this specific date</option>
-                        <option value="weekly">Repeat Weekly (for 4 weeks)</option>
-                        <option value="biweekly">Repeat Bi-weekly (every 2 weeks, for 3 rides)</option>
+                        <option value="none">Just this one trip</option>
+                        <option value="weekly">Repeat Trip Weekly (4 times)</option>
+                        <option value="biweekly">Repeat Trip Bi-weekly (3 times)</option>
                     </select>
                 </div>
 
-                <button type="submit" class="submit-btn">Book Bike</button>
+                <button type="submit" class="submit-btn">Request Bike Booking</button>
             </form>
         </div>
 
         <hr>
 
-        <h2>Upcoming Rides</h2>
-        <div id="bookingContainer">
-            <p class="empty-state">Connecting to database...</p>
+        <h2 class="section-title">⚠️ Pending Approvals</h2>
+        <div id="pendingContainer">
+            <p class="empty-state">Loading...</p>
+        </div>
+
+        <h2 class="section-title" style="margin-top: 2rem;">✅ Confirmed Schedule</h2>
+        <div id="approvedContainer">
+            <p class="empty-state">Loading...</p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, where } 
+        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy } 
             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // Your exact Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBSCIwNy_IpVIqp-055o93IlWU4B2wkgqs",
             authDomain: "bike-ffb71.firebaseapp.com",
@@ -292,231 +240,295 @@
         const db = getFirestore(app);
         const bookingsRef = collection(db, "bookings");
 
-        let allBookings = []; // Local cache of firebase data
-        
-        // Calendar State
+        let currentUser = localStorage.getItem('bikeAppUser');
+        let allBookings = []; 
         let currentDate = new Date();
-        let selectedDate = new Date();
 
         // UI Elements
-        const calendarDays = document.getElementById('calendarDays');
-        const monthDisplay = document.getElementById('monthDisplay');
-        const dateInput = document.getElementById('rideDate');
-        const bookingContainer = document.getElementById('bookingContainer');
-        const bookingForm = document.getElementById('bookingForm');
+        const loginOverlay = document.getElementById('loginOverlay');
+        const mainApp = document.getElementById('mainApp');
+        const userDisplay = document.getElementById('userDisplay');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        
+        // --- AUTHENTICATION LOGIC ---
+        window.loginUser = function(name) {
+            localStorage.setItem('bikeAppUser', name);
+            currentUser = name;
+            checkAuth();
+        }
 
-        // Set initial date in form to today
-        dateInput.value = selectedDate.toISOString().split('T')[0];
+        window.logoutUser = function() {
+            localStorage.removeItem('bikeAppUser');
+            location.reload();
+        }
+
+        function checkAuth() {
+            if(currentUser) {
+                loginOverlay.style.display = 'none';
+                mainApp.style.display = 'block';
+                userDisplay.innerText = currentUser;
+                userDisplay.style.color = currentUser === 'Aaron' ? 'var(--aaron-color)' : 'var(--nathen-color)';
+            } else {
+                loginOverlay.style.display = 'flex';
+                mainApp.style.display = 'none';
+            }
+        }
+        checkAuth();
+
+        // Defaults to today
+        const todayStr = new Date().toISOString().split('T')[0];
+        startDateInput.value = todayStr;
+        endDateInput.value = todayStr;
+
+        // Auto-update end date if it's before start date
+        startDateInput.addEventListener('change', () => {
+            if(endDateInput.value < startDateInput.value) {
+                endDateInput.value = startDateInput.value;
+            }
+            renderCalendar();
+        });
+
+        // --- HELPER: Get all days between two dates ---
+        function getDatesInRange(startStr, endStr) {
+            const dates = [];
+            let curr = new Date(startStr + 'T00:00:00');
+            const end = new Date(endStr + 'T00:00:00');
+            while(curr <= end) {
+                dates.push(curr.toISOString().split('T')[0]);
+                curr.setDate(curr.getDate() + 1);
+            }
+            return dates;
+        }
 
         // --- CALENDAR LOGIC ---
         function renderCalendar() {
+            const calendarDays = document.getElementById('calendarDays');
+            const monthDisplay = document.getElementById('monthDisplay');
             calendarDays.innerHTML = '';
             
-            // Add day headers
             const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             daysOfWeek.forEach(day => {
                 const div = document.createElement('div');
-                div.className = 'day-name';
-                div.innerText = day;
+                div.className = 'day-name'; div.innerText = day;
                 calendarDays.appendChild(div);
             });
 
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
-            
             monthDisplay.innerText = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-            // Empty slots for days before 1st of month
             for (let i = 0; i < firstDay; i++) {
                 const emptyDiv = document.createElement('div');
                 emptyDiv.className = 'calendar-day empty';
                 calendarDays.appendChild(emptyDiv);
             }
 
-            // Fill actual days
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayDiv = document.createElement('div');
                 dayDiv.className = 'calendar-day';
                 dayDiv.innerText = day;
                 
-                // Format YYYY-MM-DD safely
                 const m = String(month + 1).padStart(2, '0');
                 const d = String(day).padStart(2, '0');
                 const dateString = `${year}-${m}-${d}`;
 
-                // Check if this day is selected
-                if (dateInput.value === dateString) {
-                    dayDiv.classList.add('selected');
-                }
+                // Highlight Approved Bookings
+                const approvedBookings = allBookings.filter(b => b.status === 'approved');
+                approvedBookings.forEach(booking => {
+                    const range = getDatesInRange(booking.startDate, booking.endDate);
+                    if(range.includes(dateString)) {
+                        dayDiv.classList.add(`${booking.requestedBy}-trip`);
+                    }
+                });
 
-                // Check for bookings on this day to add colored dots
-                const dayBookings = allBookings.filter(b => b.date === dateString);
-                if (dayBookings.length > 0) {
-                    const dotContainer = document.createElement('div');
-                    dotContainer.className = 'dot-container';
-                    dayBookings.forEach(b => {
-                        const dot = document.createElement('div');
-                        dot.className = `dot ${b.name}`;
-                        dotContainer.appendChild(dot);
-                    });
-                    dayDiv.appendChild(dotContainer);
-                }
+                // Highlight Pending Bookings
+                const pendingBookings = allBookings.filter(b => b.status === 'pending');
+                pendingBookings.forEach(booking => {
+                    const range = getDatesInRange(booking.startDate, booking.endDate);
+                    if(range.includes(dateString)) {
+                        dayDiv.classList.add('pending-trip');
+                    }
+                });
 
-                // Click event to select date
                 dayDiv.addEventListener('click', () => {
-                    dateInput.value = dateString;
-                    renderCalendar(); // Re-render to highlight selected
+                    startDateInput.value = dateString;
+                    endDateInput.value = dateString;
+                    renderCalendar();
                 });
 
                 calendarDays.appendChild(dayDiv);
             }
         }
 
-        // Month Navigation
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        });
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        });
+        document.getElementById('prevMonth').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
+        document.getElementById('nextMonth').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
 
         // --- LISTENER & RENDERING LOGIC ---
-        function formatTime(timeString) {
-            const [hour, minute] = timeString.split(':');
-            const h = parseInt(hour, 10);
-            return `${h % 12 || 12}:${minute} ${h >= 12 ? 'PM' : 'AM'}`;
+        function formatDate(dateStr) {
+            return new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
         }
 
-        const q = query(bookingsRef, orderBy("date"), orderBy("start"));
+        const q = query(bookingsRef, orderBy("startDate"));
         onSnapshot(q, (snapshot) => {
             allBookings = [];
-            bookingContainer.innerHTML = ''; 
+            const pendingContainer = document.getElementById('pendingContainer');
+            const approvedContainer = document.getElementById('approvedContainer');
             
-            if (snapshot.empty) {
-                bookingContainer.innerHTML = '<p class="empty-state">No upcoming rides booked. Select a date to start!</p>';
-                renderCalendar();
-                return;
-            }
+            pendingContainer.innerHTML = ''; 
+            approvedContainer.innerHTML = '';
 
-            const ul = document.createElement('ul');
-            ul.className = 'booking-list';
-
-            // Only show bookings from today onwards in the list
-            const todayStr = new Date().toISOString().split('T')[0];
+            let hasPending = false;
+            let hasApproved = false;
 
             snapshot.forEach((docSnapshot) => {
                 const booking = docSnapshot.data();
                 const bookingId = docSnapshot.id;
-                
-                // Save to local cache for the calendar
                 allBookings.push(booking);
 
-                // Only render future/today rides in the list below
-                if(booking.date >= todayStr) {
-                    const li = document.createElement('li');
-                    li.className = `booking-item ${booking.name}`;
+                // Only show future/ongoing rides in lists
+                if(booking.endDate >= todayStr) {
+                    const li = document.createElement('div');
+                    li.className = `booking-item ${booking.requestedBy}`;
 
-                    const infoDiv = document.createElement('div');
-                    infoDiv.className = 'booking-info';
-                    
-                    const dateObj = new Date(booking.date + 'T00:00:00');
-                    const dateStr = dateObj.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+                    const dateText = booking.startDate === booking.endDate 
+                        ? formatDate(booking.startDate) 
+                        : `${formatDate(booking.startDate)} to ${formatDate(booking.endDate)}`;
 
-                    infoDiv.innerHTML = `
-                        <strong>${booking.name}'s Ride</strong>
-                        <span>📅 ${dateStr}</span><br>
-                        <span>⏰ ${formatTime(booking.start)} - ${formatTime(booking.end)}</span>
+                    let innerHTML = `
+                        <div class="booking-header">
+                            <strong>${booking.requestedBy}'s Booking</strong>
+                            <span class="status-badge ${booking.status === 'pending' ? 'status-pending' : 'status-approved'}">
+                                ${booking.status.toUpperCase()}
+                            </span>
+                        </div>
+                        <div class="booking-info">
+                            <span>📅 ${dateText}</span>
+                        </div>
+                        <div class="actions" id="actions-${bookingId}"></div>
                     `;
+                    li.innerHTML = innerHTML;
 
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.textContent = 'Cancel';
-                    
-                    deleteBtn.addEventListener('click', async () => {
-                        if(confirm("Cancel this ride?")) {
-                            await deleteDoc(doc(db, "bookings", bookingId));
+                    if(booking.status === 'pending') {
+                        hasPending = true;
+                        pendingContainer.appendChild(li);
+                        
+                        const actionDiv = li.querySelector(`#actions-${bookingId}`);
+                        if(booking.requestedBy !== currentUser) {
+                            // The OTHER person sees the approve button
+                            const approveBtn = document.createElement('button');
+                            approveBtn.className = 'btn-approve';
+                            approveBtn.innerText = 'Approve Ride';
+                            approveBtn.onclick = async () => await updateDoc(doc(db, "bookings", bookingId), { status: 'approved' });
+                            
+                            const denyBtn = document.createElement('button');
+                            denyBtn.className = 'btn-cancel';
+                            denyBtn.innerText = 'Deny';
+                            denyBtn.onclick = async () => { if(confirm("Deny this request?")) await deleteDoc(doc(db, "bookings", bookingId)); };
+
+                            actionDiv.appendChild(approveBtn);
+                            actionDiv.appendChild(denyBtn);
+                        } else {
+                            // YOU see the waiting text and cancel button
+                            const waitText = document.createElement('span');
+                            waitText.style.fontSize = "0.85rem";
+                            waitText.style.color = "#d97706";
+                            waitText.innerText = `Waiting for ${currentUser === 'Aaron' ? 'Nathen' : 'Aaron'} to approve...`;
+                            
+                            const cancelBtn = document.createElement('button');
+                            cancelBtn.className = 'btn-cancel';
+                            cancelBtn.innerText = 'Cancel Request';
+                            cancelBtn.onclick = async () => { if(confirm("Cancel your request?")) await deleteDoc(doc(db, "bookings", bookingId)); };
+
+                            actionDiv.appendChild(waitText);
+                            actionDiv.appendChild(cancelBtn);
                         }
-                    });
-
-                    li.appendChild(infoDiv);
-                    li.appendChild(deleteBtn);
-                    ul.appendChild(li);
+                    } else {
+                        hasApproved = true;
+                        approvedContainer.appendChild(li);
+                        
+                        // If it's approved, anyone can cancel it (or just the owner, but let's leave it open)
+                        const actionDiv = li.querySelector(`#actions-${bookingId}`);
+                        const cancelBtn = document.createElement('button');
+                        cancelBtn.className = 'btn-cancel';
+                        cancelBtn.innerText = 'Cancel Ride';
+                        cancelBtn.onclick = async () => { if(confirm("Cancel this confirmed ride?")) await deleteDoc(doc(db, "bookings", bookingId)); };
+                        actionDiv.appendChild(cancelBtn);
+                    }
                 }
             });
 
-            bookingContainer.appendChild(ul);
-            renderCalendar(); // Update calendar dots
+            if(!hasPending) pendingContainer.innerHTML = '<p class="empty-state">No pending requests right now.</p>';
+            if(!hasApproved) approvedContainer.innerHTML = '<p class="empty-state">No confirmed rides coming up.</p>';
+
+            renderCalendar(); 
         });
 
-        // Update calendar if user types in the date input manually
-        dateInput.addEventListener('change', renderCalendar);
-
-        // --- FORM SUBMISSION (Handles Schedule Setter) ---
-        bookingForm.addEventListener('submit', async function(e) {
+        // --- FORM SUBMISSION ---
+        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault(); 
             
-            const submitBtn = bookingForm.querySelector('.submit-btn');
-            submitBtn.textContent = "Saving to schedule...";
+            const submitBtn = this.querySelector('.submit-btn');
+            submitBtn.textContent = "Sending Request...";
             submitBtn.disabled = true;
 
-            const name = document.getElementById('riderName').value;
-            const startDateStr = document.getElementById('rideDate').value;
-            const start = document.getElementById('startTime').value;
-            const end = document.getElementById('endTime').value;
+            const startStr = startDateInput.value;
+            const endStr = endDateInput.value;
             const repeat = document.getElementById('repeatSchedule').value;
 
-            // Figure out the dates we need to create
-            const datesToBook = [];
-            const baseDate = new Date(startDateStr + 'T00:00:00');
+            // Calculate duration in days for the repeats
+            const startObj = new Date(startStr + 'T00:00:00');
+            const endObj = new Date(endStr + 'T00:00:00');
+            const diffTime = Math.abs(endObj - startObj);
+            const durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            const bookingsToCreate = [];
 
             if (repeat === 'none') {
-                datesToBook.push(startDateStr);
+                bookingsToCreate.push({ start: startStr, end: endStr });
             } 
             else if (repeat === 'weekly') {
-                // Book today + next 3 weeks
                 for (let i = 0; i < 4; i++) {
-                    const newDate = new Date(baseDate);
-                    newDate.setDate(baseDate.getDate() + (i * 7));
-                    datesToBook.push(newDate.toISOString().split('T')[0]);
+                    const newStart = new Date(startObj); newStart.setDate(startObj.getDate() + (i * 7));
+                    const newEnd = new Date(newStart); newEnd.setDate(newStart.getDate() + durationDays);
+                    bookingsToCreate.push({ 
+                        start: newStart.toISOString().split('T')[0], 
+                        end: newEnd.toISOString().split('T')[0] 
+                    });
                 }
             } 
             else if (repeat === 'biweekly') {
-                // Book today + next 2 bi-weekly occurrences
                 for (let i = 0; i < 3; i++) {
-                    const newDate = new Date(baseDate);
-                    newDate.setDate(baseDate.getDate() + (i * 14));
-                    datesToBook.push(newDate.toISOString().split('T')[0]);
+                    const newStart = new Date(startObj); newStart.setDate(startObj.getDate() + (i * 14));
+                    const newEnd = new Date(newStart); newEnd.setDate(newStart.getDate() + durationDays);
+                    bookingsToCreate.push({ 
+                        start: newStart.toISOString().split('T')[0], 
+                        end: newEnd.toISOString().split('T')[0] 
+                    });
                 }
             }
 
             try {
-                // Save all generated dates to Firebase
-                const promises = datesToBook.map(dateStr => {
+                const promises = bookingsToCreate.map(dates => {
                     return addDoc(bookingsRef, {
-                        name: name,
-                        date: dateStr,
-                        start: start,
-                        end: end
+                        requestedBy: currentUser,
+                        startDate: dates.start,
+                        endDate: dates.end,
+                        status: 'pending' // ALWAYS PENDING INITIALLY
                     });
                 });
 
                 await Promise.all(promises);
-                
-                // Don't reset everything, just reset the time so they can pick again easily
-                document.getElementById('startTime').value = '';
-                document.getElementById('endTime').value = '';
                 document.getElementById('repeatSchedule').value = 'none';
                 
             } catch (error) {
                 console.error(error);
-                alert("Failed to book ride.");
+                alert("Failed to request booking.");
             } finally {
-                submitBtn.textContent = "Book Bike";
+                submitBtn.textContent = "Request Bike Booking";
                 submitBtn.disabled = false;
             }
         });
