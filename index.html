@@ -152,6 +152,74 @@
 
         .section-title { font-size: 1.1rem; color: var(--primary); margin-bottom: 1rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;}
         .empty-state { text-align: center; color: #64748b; font-size: 0.9rem; }
+
+        /* Chat Styles */
+        .chat-container {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 350px;
+            background: #f8fafc;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .chat-msg {
+            max-width: 80%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        .msg-mine {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+        .msg-theirs {
+            align-self: flex-start;
+            background: #e2e8f0;
+            color: var(--text);
+            border-bottom-left-radius: 2px;
+        }
+        .msg-sender {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-bottom: 0.2rem;
+            font-weight: bold;
+        }
+        .chat-form {
+            display: flex;
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+        .chat-form input {
+            flex-grow: 1;
+            border: none;
+            border-radius: 0;
+            padding: 1rem;
+            outline: none;
+        }
+        .chat-form button {
+            width: auto;
+            margin: 0;
+            border-radius: 0;
+            border: none;
+            background: var(--primary);
+            color: white;
+            padding: 0 1.5rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .chat-form button:hover { background-color: var(--primary-dark); }
     </style>
 </head>
 <body>
@@ -220,11 +288,23 @@
         <div id="approvedContainer">
             <p class="empty-state">Loading...</p>
         </div>
+
+        <hr>
+
+        <h2 class="section-title">💬 Bike Chat</h2>
+        <div class="chat-container">
+            <div id="chatMessages" class="chat-messages">
+                </div>
+            <form id="chatForm" class="chat-form">
+                <input type="text" id="chatInput" placeholder="Send a message..." required autocomplete="off">
+                <button type="submit">Send</button>
+            </form>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy } 
+        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy, serverTimestamp } 
             from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -239,6 +319,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const bookingsRef = collection(db, "bookings");
+        const chatRef = collection(db, "chats");
 
         let currentUser = localStorage.getItem('bikeAppUser');
         let allBookings = []; 
@@ -250,6 +331,8 @@
         const userDisplay = document.getElementById('userDisplay');
         const startDateInput = document.getElementById('startDate');
         const endDateInput = document.getElementById('endDate');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
         
         // --- AUTHENTICATION LOGIC ---
         window.loginUser = function(name) {
@@ -276,8 +359,10 @@
         }
         checkAuth();
 
-        // Defaults to today
-        const todayStr = new Date().toISOString().split('T')[0];
+        // Safe local date generation (Fixes the UTC bug!)
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        
         startDateInput.value = todayStr;
         endDateInput.value = todayStr;
 
@@ -367,13 +452,13 @@
         document.getElementById('prevMonth').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
         document.getElementById('nextMonth').addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
 
-        // --- LISTENER & RENDERING LOGIC ---
+        // --- LISTENER & RENDERING LOGIC (Bookings) ---
         function formatDate(dateStr) {
             return new Date(dateStr + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
         }
 
-        const q = query(bookingsRef, orderBy("startDate"));
-        onSnapshot(q, (snapshot) => {
+        const qBookings = query(bookingsRef, orderBy("startDate"));
+        onSnapshot(qBookings, (snapshot) => {
             allBookings = [];
             const pendingContainer = document.getElementById('pendingContainer');
             const approvedContainer = document.getElementById('approvedContainer');
@@ -389,7 +474,7 @@
                 const bookingId = docSnapshot.id;
                 allBookings.push(booking);
 
-                // Only show future/ongoing rides in lists
+                // Only show future/ongoing rides in lists using the fixed date logic
                 if(booking.endDate >= todayStr) {
                     const li = document.createElement('div');
                     li.className = `booking-item ${booking.requestedBy}`;
@@ -450,7 +535,6 @@
                         hasApproved = true;
                         approvedContainer.appendChild(li);
                         
-                        // If it's approved, anyone can cancel it (or just the owner, but let's leave it open)
                         const actionDiv = li.querySelector(`#actions-${bookingId}`);
                         const cancelBtn = document.createElement('button');
                         cancelBtn.className = 'btn-cancel';
@@ -465,9 +549,12 @@
             if(!hasApproved) approvedContainer.innerHTML = '<p class="empty-state">No confirmed rides coming up.</p>';
 
             renderCalendar(); 
+        }, (error) => {
+            console.error("Firestore Error:", error);
+            document.getElementById('pendingContainer').innerHTML = `<p class="empty-state" style="color:red;">Error connecting to database. Please refresh or check Firestore rules.</p>`;
         });
 
-        // --- FORM SUBMISSION ---
+        // --- FORM SUBMISSION (Bookings) ---
         document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault(); 
             
@@ -479,7 +566,6 @@
             const endStr = endDateInput.value;
             const repeat = document.getElementById('repeatSchedule').value;
 
-            // Calculate duration in days for the repeats
             const startObj = new Date(startStr + 'T00:00:00');
             const endObj = new Date(endStr + 'T00:00:00');
             const diffTime = Math.abs(endObj - startObj);
@@ -494,20 +580,14 @@
                 for (let i = 0; i < 4; i++) {
                     const newStart = new Date(startObj); newStart.setDate(startObj.getDate() + (i * 7));
                     const newEnd = new Date(newStart); newEnd.setDate(newStart.getDate() + durationDays);
-                    bookingsToCreate.push({ 
-                        start: newStart.toISOString().split('T')[0], 
-                        end: newEnd.toISOString().split('T')[0] 
-                    });
+                    bookingsToCreate.push({ start: newStart.toISOString().split('T')[0], end: newEnd.toISOString().split('T')[0] });
                 }
             } 
             else if (repeat === 'biweekly') {
                 for (let i = 0; i < 3; i++) {
                     const newStart = new Date(startObj); newStart.setDate(startObj.getDate() + (i * 14));
                     const newEnd = new Date(newStart); newEnd.setDate(newStart.getDate() + durationDays);
-                    bookingsToCreate.push({ 
-                        start: newStart.toISOString().split('T')[0], 
-                        end: newEnd.toISOString().split('T')[0] 
-                    });
+                    bookingsToCreate.push({ start: newStart.toISOString().split('T')[0], end: newEnd.toISOString().split('T')[0] });
                 }
             }
 
@@ -517,7 +597,7 @@
                         requestedBy: currentUser,
                         startDate: dates.start,
                         endDate: dates.end,
-                        status: 'pending' // ALWAYS PENDING INITIALLY
+                        status: 'pending' 
                     });
                 });
 
@@ -526,12 +606,69 @@
                 
             } catch (error) {
                 console.error(error);
-                alert("Failed to request booking.");
+                alert("Failed to request booking. Double-check your Firestore Rules.");
             } finally {
                 submitBtn.textContent = "Request Bike Booking";
                 submitBtn.disabled = false;
             }
         });
+
+        // --- REAL-TIME CHAT LOGIC ---
+        const qChat = query(chatRef, orderBy("timestamp"));
+        onSnapshot(qChat, (snapshot) => {
+            chatMessages.innerHTML = '';
+            
+            if (snapshot.empty) {
+                chatMessages.innerHTML = '<p class="empty-state" style="margin-top:auto; margin-bottom:auto;">No messages yet. Say hi!</p>';
+                return;
+            }
+
+            snapshot.forEach((docSnap) => {
+                const msg = docSnap.data();
+                
+                // Hide optimistic updates that don't have a timestamp yet
+                if(!msg.timestamp) return; 
+
+                const isMine = msg.sender === currentUser;
+                const div = document.createElement('div');
+                div.className = `chat-msg ${isMine ? 'msg-mine' : 'msg-theirs'}`;
+                
+                let html = '';
+                // Only show the sender's name if it's the other person
+                if (!isMine) {
+                    html += `<div class="msg-sender">${msg.sender}</div>`;
+                }
+                html += `<div>${msg.text}</div>`;
+                
+                div.innerHTML = html;
+                chatMessages.appendChild(div);
+            });
+
+            // Auto-scroll to the bottom when a new message arrives
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            
+            if (!text || !currentUser) return;
+            
+            input.value = ''; // clear input immediately so it feels snappy
+            
+            try {
+                await addDoc(chatRef, {
+                    sender: currentUser,
+                    text: text,
+                    timestamp: serverTimestamp() // Uses Firebase server time
+                });
+            } catch (err) {
+                console.error("Error sending message:", err);
+                alert("Failed to send message.");
+            }
+        });
+
     </script>
 </body>
 </html>
